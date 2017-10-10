@@ -16,6 +16,7 @@ class ViewController: UIViewController {
     var pickedAnswer : Bool = false
     var questionNumber : Int = 0
     var totalQuestion : Int = 0
+    var scoreNumber : Int = 0
     
     
     
@@ -26,10 +27,10 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        let firstQuestion = allQuestions.list[0]
-        questionLabel.text = firstQuestion.questionText
+        //my codes
         totalQuestion = allQuestions.list.count
-        print (totalQuestion)
+        nextQuestion()
+
     }
 
 
@@ -43,27 +44,33 @@ class ViewController: UIViewController {
         questionNumber += 1
         nextQuestion()
         
+        
   
     }
     
     
     func updateUI() {
+        scoreLabel.text = "score: \(scoreNumber)"
+        progressLabel.text = "\(questionNumber+1) / \(totalQuestion)"
+        progressBar.frame.size.width = (view.frame.size.width / CGFloat(totalQuestion)) * CGFloat(questionNumber+1)
       
     }
     
 
     func nextQuestion() {
-        if questionNumber < totalQuestion{
+        if questionNumber < totalQuestion {
             questionLabel.text = allQuestions.list[questionNumber].questionText
+            updateUI()
         }
         else{
-            let alertMessage = UIAlertController(title: "End of you Quiz!!", message: "Do you want to restart the test?", preferredStyle: .alert)
+            let alertMessage = UIAlertController(title: "End of you Quiz!!", message: "Yous Score is: \(scoreNumber)\nDo you want to restart the test?", preferredStyle: .alert)
             let alertAction = UIAlertAction(title: "Restart", style: .default, handler: { (UIAlertAction) in
                 self.startOver()
             })
             alertMessage.addAction(alertAction)
             present(alertMessage, animated: true, completion: nil)
         }
+        
         
     }
     
@@ -72,6 +79,7 @@ class ViewController: UIViewController {
         let correctAnswer = allQuestions.list[questionNumber].answer
         if correctAnswer==pickedAnswer {
             print("You picked the true")
+            scoreNumber += 1
         }
         else{
             print("worng!!")
@@ -82,6 +90,7 @@ class ViewController: UIViewController {
     
     func startOver() {
         questionNumber = 0
+        scoreNumber = 0
         nextQuestion()
        
     }
